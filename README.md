@@ -9,7 +9,7 @@
 
 **ChurnInsight** é uma plataforma moderna de Business Intelligence focada na retenção de clientes. O sistema oferece um dashboard intuitivo para monitorar métricas vitais, identificar clientes em risco de cancelamento (Churn) e analisar o comportamento de safras (Cohort Analysis).
 
-![Dashboard Preview](./public/sistema/dashboard-dark.png)
+![Dashboard Preview](./public/sistema/dashboard.png)
 *(Substitua o caminho acima pela sua imagem do Dashboard)*
 
 ---
@@ -36,7 +36,7 @@ O projeto conta com um conjunto robusto de ferramentas de análise:
 
 ### Visão Geral (Dashboard)
 Uma visão consolidada da saúde financeira e retenção.
-![Dashboard Dark](./public/sistema/dashboard-dark.png)
+![Dashboard Dark](./public/sistema/dashboard.png)
 
 ### Gestão de Clientes (Tabela Paginada)
 Filtragem avançada e identificação visual de riscos críticos.
@@ -44,7 +44,7 @@ Filtragem avançada e identificação visual de riscos críticos.
 
 ### Análise de Cohort (Retenção)
 Visualização de safras com Heatmaps dinâmicos.
-![Cohort](./public/sistema/cohort.png)
+![Cohort](./public/sistema/analise.png)
 
 *(Dica: Coloque os prints nas pastas indicadas para que apareçam aqui)*
 
