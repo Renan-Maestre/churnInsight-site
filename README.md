@@ -9,7 +9,7 @@
 
 **ChurnInsight** é uma plataforma moderna de Business Intelligence focada na retenção de clientes. O sistema oferece um dashboard intuitivo para monitorar métricas vitais, identificar clientes em risco de cancelamento (Churn) e analisar o comportamento de safras (Cohort Analysis).
 
-![Dashboard Preview](./public/screenshots/dashboard-dark.png)
+![Dashboard Preview](./public/sistema/dashboard-dark.png)
 *(Substitua o caminho acima pela sua imagem do Dashboard)*
 
 ---
@@ -36,15 +36,15 @@ O projeto conta com um conjunto robusto de ferramentas de análise:
 
 ### Visão Geral (Dashboard)
 Uma visão consolidada da saúde financeira e retenção.
-![Dashboard Dark](./public/screenshots/dashboard-dark.png)
+![Dashboard Dark](./public/sistema/dashboard-dark.png)
 
 ### Gestão de Clientes (Tabela Paginada)
 Filtragem avançada e identificação visual de riscos críticos.
-![Clientes](./public/screenshots/clientes.png)
+![Clientes](./public/sistema/clientes.png)
 
 ### Análise de Cohort (Retenção)
 Visualização de safras com Heatmaps dinâmicos.
-![Cohort](./public/screenshots/cohort.png)
+![Cohort](./public/sistema/cohort.png)
 
 *(Dica: Coloque os prints nas pastas indicadas para que apareçam aqui)*
 
@@ -70,7 +70,7 @@ Pré-requisitos: Node.js (v18+) instalado.
 
 1.  **Clone o repositório**
     ```bash
-    git clone [https://github.com/seu-usuario/churn-insight.git](https://github.com/seu-usuario/churn-insight.git)
+    git clone [https://github.com/seu-usuario/churn-insight.git](https://github.com/seu-usuario/churnInsight-site.git)
     cd churn-insight
     ```
 
@@ -84,7 +84,7 @@ Pré-requisitos: Node.js (v18+) instalado.
     npm run dev
     ```
 
-4.  Acesse `http://localhost:5173` no seu navegador.
+4.  Acesse `http://localhost:3000` no seu navegador.
 
 ---
 
