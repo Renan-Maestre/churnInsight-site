@@ -4,7 +4,7 @@ import { AppLayout } from "./components/layout/AppLayout";
 import { Dashboard } from "./pages/app/Dashboard";
 import { Customers } from "./pages/app/Customers";
 import { CohortAnalysis } from "./pages/app/CohortAnalysis";
-import { Settings } from "./pages/app/Settings"; // <--- 1. Importar
+import { Settings } from "./pages/app/Settings"; 
 
 export default function App() {
   return (
@@ -16,7 +16,7 @@ export default function App() {
           <Route index element={<Dashboard />} />
           <Route path="clientes" element={<Customers />} />
           <Route path="analises" element={<CohortAnalysis />} />
-          {/* 2. Atualizar a rota */}
+         
           <Route path="configuracoes" element={<Settings />} />
         </Route>
       </Routes>

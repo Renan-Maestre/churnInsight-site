@@ -6,10 +6,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Bell, User, Palette, Mail, Smartphone } from "lucide-react";
-import { ModeToggle } from "@/components/mode-toggle"; // Reutilizando seu toggle
+import { Bell, Palette, Mail } from "lucide-react";
+import { ModeToggle } from "@/components/mode-toggle"; 
 
 export function Settings() {
   return (
@@ -70,7 +69,7 @@ export function Settings() {
           </Card>
         </TabsContent>
 
-        {/* --- ABA NOTIFICAÇÕES (Importante para Churn) --- */}
+        {/* --- ABA NOTIFICAÇÕES  --- */}
         <TabsContent value="notifications" className="space-y-6">
           <Card>
             <CardHeader>

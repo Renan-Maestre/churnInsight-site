@@ -1,66 +1,160 @@
+import { useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { MoreHorizontal, ArrowUpDown, Search, Filter, Download, AlertCircle } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { MoreHorizontal, Search, Download, X } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+ 
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
-// Dados simulados com foco em Risco
-const clients = [
-  { id: "1", name: "Tech Solutions Ltd", email: "contact@techsol.com", status: "Crítico", risk: 92, value: "R$ 1.200", lastAccess: "há 12 dias", logo: "TS" },
-  { id: "2", name: "Acme Corp", email: "admin@acme.com", status: "Alerta", risk: 65, value: "R$ 3.500", lastAccess: "há 2 dias", logo: "AC" },
-  { id: "3", name: "Globex Inc", email: "suporte@globex.com", status: "Saudável", risk: 12, value: "R$ 890", lastAccess: "há 3 horas", logo: "GL" },
-  { id: "4", name: "Stark Industries", email: "tony@stark.com", status: "Saudável", risk: 5, value: "R$ 12.000", lastAccess: "agora", logo: "SI" },
-  { id: "5", name: "Umbrella Corp", email: "wesker@umbrella.com", status: "Crítico", risk: 88, value: "R$ 5.600", lastAccess: "há 25 dias", logo: "UC" },
-  { id: "6", name: "Cyberdyne Systems", email: "skynet@cyber.com", status: "Alerta", risk: 45, value: "R$ 9.100", lastAccess: "há 5 dias", logo: "CS" },
-];
+// --- GERADOR DE DADOS COERENTES ---
+const generateClients = () => {
+  return Array.from({ length: 50 }).map((_, i) => {
+   
+    const risk = Math.floor(Math.random() * 100);
+    
+    // 2. O Status é derivado do risco (Coerência garantida)
+    let status = "Saudável";
+    if (risk >= 80) status = "Crítico";
+    else if (risk >= 40) status = "Alerta";
+
+    return {
+      id: i.toString(),
+      name: `Empresa ${i + 1} Ltda`,
+      email: `contato@empresa${i + 1}.com`,
+      status: status,
+      risk: risk,
+      value: `R$ ${(Math.random() * 10000 + 1000).toFixed(2)}`, 
+      lastAccess: `há ${Math.floor(Math.random() * 30)} dias`,
+      logo: `E${i + 1}`
+    };
+  });
+};
+
+const allClients = generateClients();
 
 export function Customers() {
+  // --- ESTADOS ---
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [riskFilter, setRiskFilter] = useState("all");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 7;
+
+  // --- LÓGICA DE FILTRAGEM ---
+  const filteredClients = allClients.filter(client => {
+    const matchesSearch = 
+      client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      client.email.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    const matchesStatus = statusFilter === "all" || client.status === statusFilter;
+
+    // Filtro de risco coerente com a nova lógica
+    let matchesRisk = true;
+    if (riskFilter === "high") matchesRisk = client.risk >= 80;
+    if (riskFilter === "medium") matchesRisk = client.risk >= 40 && client.risk < 80;
+    if (riskFilter === "low") matchesRisk = client.risk < 40;
+
+    return matchesSearch && matchesStatus && matchesRisk;
+  });
+
+  // --- PAGINAÇÃO ---
+  const totalPages = Math.ceil(filteredClients.length / itemsPerPage);
+  
+  if (currentPage > totalPages && totalPages > 0) {
+    setCurrentPage(1);
+  }
+
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentClients = filteredClients.slice(startIndex, endIndex);
+
+  const clearFilters = () => {
+    setSearchTerm("");
+    setStatusFilter("all");
+    setRiskFilter("all");
+    setCurrentPage(1);
+  };
+
+  const hasActiveFilters = searchTerm !== "" || statusFilter !== "all" || riskFilter !== "all";
+
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
       
-      {/* Cabeçalho */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">Clientes em Risco</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">Clientes</h1>
           <p className="text-muted-foreground">
-            Monitore a saúde da sua base e aja antes do cancelamento.
+            Gerencie sua base de clientes e monitore sinais vitais.
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          <Button variant="outline">
-            <Download className="mr-2 h-4 w-4" /> Exportar
-          </Button>
-          <Button className="bg-indigo-600 hover:bg-indigo-700 text-white">
-            <AlertCircle className="mr-2 h-4 w-4" /> Ver Críticos
-          </Button>
-        </div>
+        <Button variant="outline">
+          <Download className="mr-2 h-4 w-4" /> Exportar CSV
+        </Button>
       </div>
 
-      {/* Card da Tabela */}
       <Card>
         <CardHeader>
-          <div className="flex items-center justify-between">
-            <div className="space-y-1">
-              <CardTitle>Base de Clientes</CardTitle>
-              <CardDescription>
-                Gerencie {clients.length} clientes monitorados.
-              </CardDescription>
-            </div>
-            {/* Filtros */}
-            <div className="flex items-center gap-2">
-              <div className="relative">
-                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                <Input 
-                  placeholder="Buscar empresa..." 
-                  className="pl-9 w-[200px] lg:w-[300px]" 
-                />
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div className="space-y-1">
+                <CardTitle>Lista de Clientes</CardTitle>
+                <CardDescription>
+                  Mostrando <strong>{filteredClients.length}</strong> resultados.
+                </CardDescription>
               </div>
-              <Button variant="outline" size="icon">
-                <Filter className="h-4 w-4" />
-              </Button>
+              
+              <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                <div className="relative flex-1 sm:w-[250px]">
+                  <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                  <Input 
+                    placeholder="Buscar cliente..." 
+                    className="pl-9"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </div>
+
+                <Select value={statusFilter} onValueChange={setStatusFilter}>
+                  <SelectTrigger className="w-full sm:w-[140px]">
+                    <SelectValue placeholder="Status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todos Status</SelectItem>
+                    <SelectItem value="Saudável">Saudável</SelectItem>
+                    <SelectItem value="Alerta">Alerta</SelectItem>
+                    <SelectItem value="Crítico">Crítico</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                <Select value={riskFilter} onValueChange={setRiskFilter}>
+                  <SelectTrigger className="w-full sm:w-[140px]">
+                    <SelectValue placeholder="Risco" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todo Risco</SelectItem>
+                    <SelectItem value="high">Alto (&gt;80%)</SelectItem>
+                    <SelectItem value="medium">Médio (40-80%)</SelectItem>
+                    <SelectItem value="low">Baixo (&lt;40%)</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                {hasActiveFilters && (
+                  <Button variant="ghost" size="icon" onClick={clearFilters} title="Limpar Filtros">
+                    <X className="h-4 w-4 text-muted-foreground" />
+                  </Button>
+                )}
+              </div>
             </div>
           </div>
         </CardHeader>
@@ -69,93 +163,111 @@ export function Customers() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[300px]">Cliente</TableHead>
+                <TableHead>Cliente</TableHead>
                 <TableHead>Status</TableHead>
-                <TableHead>
-                  <div className="flex items-center gap-2 cursor-pointer hover:text-foreground">
-                    Risco de Churn <ArrowUpDown className="h-4 w-4" />
-                  </div>
-                </TableHead>
-                <TableHead>Receita (ARR)</TableHead>
-                <TableHead>Último Acesso</TableHead>
+                <TableHead>Risco Calculado</TableHead>
+                <TableHead>Receita</TableHead>
+                <TableHead className="hidden md:table-cell">Acesso</TableHead>
                 <TableHead className="text-right">Ações</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {clients.map((client) => (
-                <TableRow key={client.id}>
-                  {/* Coluna: Cliente */}
-                  <TableCell>
-                    <div className="flex items-center gap-3">
-                      <Avatar className="h-9 w-9 border">
-                        <AvatarImage src={`https://ui-avatars.com/api/?name=${client.name}&background=random`} />
-                        <AvatarFallback>{client.logo}</AvatarFallback>
-                      </Avatar>
-                      <div className="flex flex-col">
-                        <span className="font-medium text-foreground">{client.name}</span>
-                        <span className="text-xs text-muted-foreground">{client.email}</span>
+              {currentClients.length > 0 ? (
+                currentClients.map((client) => (
+                  <TableRow key={client.id}>
+                    <TableCell>
+                      <div className="flex items-center gap-3">
+                        <Avatar className="h-9 w-9 border hidden sm:flex">
+                          <AvatarFallback>{client.logo}</AvatarFallback>
+                        </Avatar>
+                        <div className="flex flex-col">
+                          <span className="font-medium text-foreground">{client.name}</span>
+                          <span className="text-xs text-muted-foreground">{client.email}</span>
+                        </div>
                       </div>
-                    </div>
-                  </TableCell>
+                    </TableCell>
 
-                  {/* Coluna: Status (Badge Dinâmica) */}
-                  <TableCell>
-                    <Badge 
-                      variant="outline" 
-                      className={`
-                        ${client.status === 'Crítico' ? 'border-red-500 text-red-500 bg-red-500/10' : ''}
-                        ${client.status === 'Alerta' ? 'border-orange-500 text-orange-500 bg-orange-500/10' : ''}
-                        ${client.status === 'Saudável' ? 'border-emerald-500 text-emerald-500 bg-emerald-500/10' : ''}
-                      `}
-                    >
-                      {client.status}
-                    </Badge>
-                  </TableCell>
+                    <TableCell>
+                      <Badge 
+                        variant="outline" 
+                        className={`
+                          ${client.status === 'Crítico' ? 'border-red-500 text-red-500 bg-red-500/10' : ''}
+                          ${client.status === 'Alerta' ? 'border-orange-500 text-orange-500 bg-orange-500/10' : ''}
+                          ${client.status === 'Saudável' ? 'border-emerald-500 text-emerald-500 bg-emerald-500/10' : ''}
+                        `}
+                      >
+                        {client.status}
+                      </Badge>
+                    </TableCell>
 
-                  {/* Coluna: Barra de Risco */}
-                  <TableCell>
-                    <div className="flex items-center gap-3">
-                      <div className="h-2 w-24 rounded-full bg-secondary overflow-hidden">
-                        <div 
-                          className={`h-full rounded-full transition-all ${
-                            client.risk > 80 ? 'bg-red-500' : 
-                            client.risk > 40 ? 'bg-orange-500' : 'bg-emerald-500'
-                          }`} 
-                          style={{ width: `${client.risk}%` }} 
-                        />
+                    <TableCell>
+                      <div className="flex flex-col gap-1 w-[80px]">
+                        <span className="text-xs font-medium text-muted-foreground">{client.risk}%</span>
+                        <div className="h-1.5 w-full rounded-full bg-secondary overflow-hidden">
+                          <div 
+                            className={`h-full rounded-full ${
+                              client.risk >= 80 ? 'bg-red-500' : 
+                              client.risk >= 40 ? 'bg-orange-500' : 'bg-emerald-500'
+                            }`} 
+                            style={{ width: `${client.risk}%` }} 
+                          />
+                        </div>
                       </div>
-                      <span className="text-xs font-medium text-muted-foreground">{client.risk}%</span>
-                    </div>
-                  </TableCell>
+                    </TableCell>
 
-                  {/* Outras Colunas */}
-                  <TableCell className="font-mono text-sm">{client.value}</TableCell>
-                  <TableCell className="text-muted-foreground text-sm">{client.lastAccess}</TableCell>
+                    <TableCell className="font-mono text-sm">{client.value}</TableCell>
+                    <TableCell className="hidden md:table-cell text-muted-foreground text-sm">{client.lastAccess}</TableCell>
 
-                  {/* Menu de Ações */}
-                  <TableCell className="text-right">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
-                          <span className="sr-only">Abrir menu</span>
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Ações</DropdownMenuLabel>
-                        <DropdownMenuItem>Ver Detalhes do Risco</DropdownMenuItem>
-                        <DropdownMenuItem>Enviar Email de Retenção</DropdownMenuItem>
-                        <DropdownMenuItem className="text-red-500 focus:text-red-500">
-                          Marcar como Perdido
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                    <TableCell className="text-right">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" className="h-8 w-8 p-0">
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuLabel>Ações</DropdownMenuLabel>
+                          <DropdownMenuItem>Ver Perfil</DropdownMenuItem>
+                          <DropdownMenuItem className="text-red-500">Alertar Gerente</DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={6} className="h-24 text-center text-muted-foreground">
+                    Nenhum cliente encontrado.
                   </TableCell>
                 </TableRow>
-              ))}
+              )}
             </TableBody>
           </Table>
         </CardContent>
+
+        <CardFooter className="flex justify-center border-t p-4">
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious 
+                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))} 
+                  className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                />
+              </PaginationItem>
+              
+              <div className="flex items-center gap-1 mx-2 text-sm text-muted-foreground">
+                Página {currentPage} de {Math.max(1, totalPages)}
+              </div>
+
+              <PaginationItem>
+                <PaginationNext 
+                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                  className={currentPage >= totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </CardFooter>
       </Card>
     </div>
   );

@@ -1,73 +1,95 @@
-# React + TypeScript + Vite
+# ChurnInsight 🚀
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![React](https://img.shields.io/badge/React-18-blue?logo=react)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)
+![Vite](https://img.shields.io/badge/Vite-4-purple?logo=vite)
+![Tailwind](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?logo=tailwind-css)
+![Shadcn/ui](https://img.shields.io/badge/Shadcn%2Fui-Latest-000000?logo=shadcnui)
 
-Currently, two official plugins are available:
+**ChurnInsight** é uma plataforma moderna de Business Intelligence focada na retenção de clientes. O sistema oferece um dashboard intuitivo para monitorar métricas vitais, identificar clientes em risco de cancelamento (Churn) e analisar o comportamento de safras (Cohort Analysis).
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+![Dashboard Preview](./public/screenshots/dashboard-dark.png)
+*(Substitua o caminho acima pela sua imagem do Dashboard)*
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## ✨ Funcionalidades
 
-## Expanding the ESLint configuration
+O projeto conta com um conjunto robusto de ferramentas de análise:
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **📊 Dashboard Executivo:** Visão geral com KPIs em tempo real (Churn Rate, Receita em Risco, Clientes em Alerta) e gráficos de tendência.
+- **⚠️ Gestão de Risco:** Tabela avançada de clientes com cálculo automático de "Health Score".
+  - Filtragem por Status (Crítico, Alerta, Saudável).
+  - Barra de progresso visual para nível de risco.
+  - Paginação e busca instantânea.
+- **📅 Análise de Cohort:** Mapa de calor (Heatmap) e curvas de decaimento para entender a retenção de clientes ao longo do tempo (LTV).
+- **🎨 UI/UX Refinada:**
+  - **Dark & Light Mode:** Tema totalmente adaptável.
+  - **Responsividade:** Layout fluido que funciona em Desktop e Tablets.
+  - **Micro-interações:** Animações suaves usando Tailwind e CSS transitions.
+- **⚙️ Configurações:** Gestão de perfil e preferências de notificação.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## 📸 Galeria do Projeto
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### Visão Geral (Dashboard)
+Uma visão consolidada da saúde financeira e retenção.
+![Dashboard Dark](./public/screenshots/dashboard-dark.png)
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Gestão de Clientes (Tabela Paginada)
+Filtragem avançada e identificação visual de riscos críticos.
+![Clientes](./public/screenshots/clientes.png)
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### Análise de Cohort (Retenção)
+Visualização de safras com Heatmaps dinâmicos.
+![Cohort](./public/screenshots/cohort.png)
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+*(Dica: Coloque os prints nas pastas indicadas para que apareçam aqui)*
+
+---
+
+## 🛠️ Tecnologias Utilizadas
+
+Este projeto foi construído com a stack mais moderna do ecossistema React:
+
+* **Core:** [React](https://react.dev/) + [Vite](https://vitejs.dev/)
+* **Linguagem:** [TypeScript](https://www.typescriptlang.org/) para tipagem estática e segurança.
+* **Estilização:** [Tailwind CSS](https://tailwindcss.com/) para design system utilitário.
+* **Componentes:** [Shadcn/ui](https://ui.shadcn.com/) (baseado em Radix UI) para componentes acessíveis e customizáveis.
+* **Gráficos:** [Recharts](https://recharts.org/) para visualização de dados complexos.
+* **Roteamento:** [React Router DOM](https://reactrouter.com/) para navegação SPA.
+* **Ícones:** [Lucide React](https://lucide.dev/).
+
+---
+
+## 🚀 Como Rodar o Projeto
+
+Pré-requisitos: Node.js (v18+) instalado.
+
+1.  **Clone o repositório**
+    ```bash
+    git clone [https://github.com/seu-usuario/churn-insight.git](https://github.com/seu-usuario/churn-insight.git)
+    cd churn-insight
+    ```
+
+2.  **Instale as dependências**
+    ```bash
+    npm install
+    ```
+
+3.  **Rode o servidor de desenvolvimento**
+    ```bash
+    npm run dev
+    ```
+
+4.  Acesse `http://localhost:5173` no seu navegador.
+
+---
+
+## 🤝 Contribuição
+Contribuições são bem-vindas! Sinta-se à vontade para abrir issues ou enviar pull requests.
+
+---
+

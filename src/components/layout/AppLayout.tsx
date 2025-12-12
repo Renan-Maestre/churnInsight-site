@@ -13,8 +13,8 @@ export function AppLayout() {
       <aside className="w-64 hidden md:flex flex-col border-r border-border bg-muted/40">
         
         <div className="h-16 flex items-center justify-between px-6 border-b border-border">
-          <div className="flex items-center">
-            <Activity className="h-6 w-6 text-indigo-500 mr-2" />
+          <div className="flex items-center ">
+            <img className="h-8  text-indigo-500 mr-2" src="/logo.png"/>
             <span className="font-bold text-lg tracking-tight">ChurnInsight</span>
           </div>
           <ModeToggle />
@@ -22,7 +22,7 @@ export function AppLayout() {
 
         <nav className="flex-1 p-4 space-y-1">
           <SidebarItem to="/" icon={<LayoutDashboard size={20} />} label="Visão Geral" />
-          <SidebarItem to="/clientes" icon={<Users size={20} />} label="Clientes em Risco" />
+          <SidebarItem to="/clientes" icon={<Users size={20} />} label="Clientes" />
           <SidebarItem to="/analises" icon={<BarChart3 size={20} />} label="Análise de Cohort" />
           <SidebarItem to="/configuracoes" icon={<Settings size={20} />} label="Configurações" />
         </nav>
