@@ -1,16 +1,25 @@
-import { Button } from "@/components/ui/button";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Login } from "./pages/auth/Login";
+import { AppLayout } from "./components/layout/AppLayout";
+import { Dashboard } from "./pages/app/Dashboard";
+import { Customers } from "./pages/app/Customers";
+import { CohortAnalysis } from "./pages/app/CohortAnalysis";
+import { Settings } from "./pages/app/Settings"; // <--- 1. Importar
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-background font-sans antialiased">
-      <main className="flex flex-col items-center justify-center h-screen gap-4">
-        <h1 className="text-4xl font-bold tracking-tighter">
-          Setup Pronto.
-        </h1>
-        <p className="text-muted-foreground">O Shadcn está funcionando.</p>
-        {/* Testando o componente Button que acabamos de instalar */}
-        <Button size="lg">Botão Shadcn</Button>
-      </main>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+
+        <Route path="/" element={<AppLayout />}>
+          <Route index element={<Dashboard />} />
+          <Route path="clientes" element={<Customers />} />
+          <Route path="analises" element={<CohortAnalysis />} />
+          {/* 2. Atualizar a rota */}
+          <Route path="configuracoes" element={<Settings />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
